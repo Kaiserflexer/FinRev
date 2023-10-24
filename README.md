@@ -26,3 +26,6 @@ Use the basic command in the settings to launch the application:
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 
+
+![Logo](https://i.ibb.co/VLmLQ71/free-icon-dollar-symbol-in-black-oval-8610925-1.png)
+
