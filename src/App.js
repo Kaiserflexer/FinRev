@@ -9,7 +9,7 @@ import { openDB, addIncomeEntry, addExpenseEntry, getIncomeEntries, getExpenseEn
 const { Content } = Layout;
 
 function App() {
-  const [categories, setCategories] = useState(['Зарплата', 'Подарок', 'Еда', 'Транспорт']);
+  const [categories, setCategories] = useState(['Зарплата', 'Подарок', 'Еда', 'Транспорт', 'Кредиты', 'Страхование', 'Медецина', 'Лекарства', 'Развлечения', 'Алкоголь', 'Фаст-фуд', 'Подарки', 'Премия', 'Ремонт', 'Штрафы', 'Бытовая Химия']);
   const [incomeEntries, setIncomeEntries] = useState([]);
   const [expenseEntries, setExpenseEntries] = useState([]);
 
