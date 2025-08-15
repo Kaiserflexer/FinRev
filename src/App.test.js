@@ -1,7 +1,25 @@
+import { render, screen } from '@testing-library/react';
+
+jest.mock('./db', () => ({
+  __esModule: true,
+  openDB: () => Promise.resolve(),
+  addIncomeEntry: () => Promise.resolve(),
+  addExpenseEntry: () => Promise.resolve(),
+  getIncomeEntries: () => Promise.resolve([]),
+  getExpenseEntries: () => Promise.resolve([]),
+  deleteIncomeEntry: () => Promise.resolve(),
+  deleteExpenseEntry: () => Promise.resolve(),
+}));
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { message } from 'antd';
 import App from './App';
 import * as db from './db';
+
+test('renders entry form title', () => {
+  render(<App />);
+  const titleElement = screen.getByText(/Ввод данных/i);
+  expect(titleElement).toBeInTheDocument();
 
 jest.mock('./EntryForm', () => ({ onSubmit }) => (
   <button onClick={() => onSubmit({ category: 'Test', amount: 100 }, 'income')}>
