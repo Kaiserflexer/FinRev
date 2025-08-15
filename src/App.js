@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Layout, Row, Col, Card, Empty, Space, Button, Progress, Statistic } from 'antd';
+import { Layout, Row, Col, Card, Empty, Space, Button, Progress, Statistic, message } from 'antd';
 import { DollarCircleOutlined, CreditCardOutlined } from '@ant-design/icons';
 import EntryForm from './EntryForm';
 import EntryList from './EntryList';
@@ -30,21 +30,57 @@ function App() {
 
   const handleEntrySubmit = async (entry, type) => {
     if (type === 'income') {
+
       await addIncomeEntry(entry);
       await updateIncomeEntries();
     } else {
       await addExpenseEntry(entry);
       await updateExpenseEntries();
+
+      addIncomeEntry(entry)
+        .then(() => {
+          updateIncomeEntries();
+        })
+        .catch((err) => {
+          message.error(`Не удалось добавить доход: ${err.message}`);
+        });
+    } else {
+      addExpenseEntry(entry)
+        .then(() => {
+          updateExpenseEntries();
+        })
+        .catch((err) => {
+          message.error(`Не удалось добавить расход: ${err.message}`);
+        });
+
     }
   };
 
   const handleEntryDelete = async (entry, type) => {
     if (type === 'income') {
+
       await deleteIncomeEntry(entry.id);
       await updateIncomeEntries();
     } else {
       await deleteExpenseEntry(entry.id);
       await updateExpenseEntries();
+
+      deleteIncomeEntry(entry.id)
+        .then(() => {
+          updateIncomeEntries();
+        })
+        .catch((err) => {
+          message.error(`Не удалось удалить доход: ${err.message}`);
+        });
+    } else {
+      deleteExpenseEntry(entry.id)
+        .then(() => {
+          updateExpenseEntries();
+        })
+        .catch((err) => {
+          message.error(`Не удалось удалить расход: ${err.message}`);
+        });
+
     }
   };
 
