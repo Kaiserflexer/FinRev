@@ -1,38 +1,53 @@
-import Dexie from 'dexie';
+const API_BASE_URL = '/api';
 
-const db = new Dexie('FinanceAppDatabase');
-db.version(1).stores({
-  incomeEntries: '++id,category,amount',
-  expenseEntries: '++id,category,amount',
-});
+/**
+ * Wrapper around fetch providing consistent error handling.
+ * @param {string} endpoint API endpoint relative to base URL.
+ * @param {RequestInit} options Fetch options.
+ * @returns {Promise<any>} Parsed JSON response.
+ * @throws {Error} Detailed error describing network or server issues.
+ */
+const request = async (endpoint, options = {}) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      ...options,
+    });
 
-export const addIncomeEntry = (entry) => {
-  return db.incomeEntries.add(entry);
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || `Request failed with status ${response.status}`);
+    }
+
+    // Attempt to parse JSON, falling back to empty object for no content.
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      return await response.json();
+    }
+
+    return {};
+  } catch (error) {
+    throw new Error(`Network error: ${error.message}`);
+  }
 };
 
-export const addExpenseEntry = (entry) => {
-  return db.expenseEntries.add(entry);
-};
+export const addIncomeEntry = (entry) =>
+  request('/income', { method: 'POST', body: JSON.stringify(entry) });
 
-export const getIncomeEntries = () => {
-  return db.incomeEntries.toArray();
-};
+export const addExpenseEntry = (entry) =>
+  request('/expense', { method: 'POST', body: JSON.stringify(entry) });
 
-export const getExpenseEntries = () => {
-  return db.expenseEntries.toArray();
-};
+export const getIncomeEntries = () => request('/income');
 
-export const deleteIncomeEntry = (id) => {
-    return db.incomeEntries.where('id').equals(Number(id)).delete();
-  };
-  
-  export const deleteExpenseEntry = (id) => {
-    return db.expenseEntries.where('id').equals(Number(id)).delete();
-  };
+export const getExpenseEntries = () => request('/expense');
 
-export const openDB = async () => {
-  await db.open();
-  return db;
-};
+export const deleteIncomeEntry = (id) =>
+  request(`/income/${id}`, { method: 'DELETE' });
 
-export default db;
+export const deleteExpenseEntry = (id) =>
+  request(`/expense/${id}`, { method: 'DELETE' });
+
+export const openDB = async () => Promise.resolve();
+
+export default {};
+
