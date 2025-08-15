@@ -16,6 +16,11 @@ import { message } from 'antd';
 import App from './App';
 import * as db from './db';
 
+test('renders input form title', () => {
+  render(<App />);
+  const title = screen.getByText(/Ввод данных/i);
+  expect(title).toBeInTheDocument();
+
 test('renders entry form title', () => {
   render(<App />);
   const titleElement = screen.getByText(/Ввод данных/i);
@@ -67,5 +72,6 @@ describe('App server failure handling', () => {
       expect(spy).toHaveBeenCalledWith(expect.stringContaining('Delete failed'))
     );
   });
+
 });
 

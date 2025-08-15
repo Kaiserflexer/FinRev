@@ -4,7 +4,7 @@ import { Layout, Row, Col, Card, Empty, Space, Button, Progress, Statistic, mess
 import { DollarCircleOutlined, CreditCardOutlined } from '@ant-design/icons';
 import EntryForm from './EntryForm';
 import EntryList from './EntryList';
-import { openDB, addIncomeEntry, addExpenseEntry, getIncomeEntries, getExpenseEntries, deleteIncomeEntry, deleteExpenseEntry } from './db';
+import { addIncomeEntry, addExpenseEntry, getIncomeEntries, getExpenseEntries, deleteIncomeEntry, deleteExpenseEntry } from './db';
 
 const { Content } = Layout;
 
@@ -14,26 +14,29 @@ function App() {
   const [expenseEntries, setExpenseEntries] = useState([]);
 
   useEffect(() => {
-    openDB().then(() => {
-      updateIncomeEntries();
-      updateExpenseEntries();
-    });
+    updateIncomeEntries();
+    updateExpenseEntries();
   }, []);
 
-  const updateIncomeEntries = () => {
-    getIncomeEntries().then((entries) => {
-      setIncomeEntries(entries);
-    });
+  const updateIncomeEntries = async () => {
+    const entries = await getIncomeEntries();
+    setIncomeEntries(entries);
   };
 
-  const updateExpenseEntries = () => {
-    getExpenseEntries().then((entries) => {
-      setExpenseEntries(entries);
-    });
+  const updateExpenseEntries = async () => {
+    const entries = await getExpenseEntries();
+    setExpenseEntries(entries);
   };
 
-  const handleEntrySubmit = (entry, type) => {
+  const handleEntrySubmit = async (entry, type) => {
     if (type === 'income') {
+
+      await addIncomeEntry(entry);
+      await updateIncomeEntries();
+    } else {
+      await addExpenseEntry(entry);
+      await updateExpenseEntries();
+
       addIncomeEntry(entry)
         .then(() => {
           updateIncomeEntries();
@@ -49,11 +52,19 @@ function App() {
         .catch((err) => {
           message.error(`Не удалось добавить расход: ${err.message}`);
         });
+
     }
   };
 
-  const handleEntryDelete = (entry, type) => {
+  const handleEntryDelete = async (entry, type) => {
     if (type === 'income') {
+
+      await deleteIncomeEntry(entry.id);
+      await updateIncomeEntries();
+    } else {
+      await deleteExpenseEntry(entry.id);
+      await updateExpenseEntries();
+
       deleteIncomeEntry(entry.id)
         .then(() => {
           updateIncomeEntries();
@@ -69,6 +80,7 @@ function App() {
         .catch((err) => {
           message.error(`Не удалось удалить расход: ${err.message}`);
         });
+
     }
   };
 
