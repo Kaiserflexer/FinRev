@@ -1,38 +1,43 @@
-import Dexie from 'dexie';
-
-const db = new Dexie('FinanceAppDatabase');
-db.version(1).stores({
-  incomeEntries: '++id,category,amount',
-  expenseEntries: '++id,category,amount',
-});
-
-export const addIncomeEntry = (entry) => {
-  return db.incomeEntries.add(entry);
+export const addIncomeEntry = async (entry) => {
+  const res = await fetch('/api/income', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(entry),
+  });
+  return res.json();
 };
 
-export const addExpenseEntry = (entry) => {
-  return db.expenseEntries.add(entry);
+export const addExpenseEntry = async (entry) => {
+  const res = await fetch('/api/expense', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(entry),
+  });
+  return res.json();
 };
 
-export const getIncomeEntries = () => {
-  return db.incomeEntries.toArray();
+export const getIncomeEntries = async () => {
+  const res = await fetch('/api/income');
+  return res.json();
 };
 
-export const getExpenseEntries = () => {
-  return db.expenseEntries.toArray();
+export const getExpenseEntries = async () => {
+  const res = await fetch('/api/expense');
+  return res.json();
 };
 
-export const deleteIncomeEntry = (id) => {
-    return db.incomeEntries.where('id').equals(Number(id)).delete();
-  };
-  
-  export const deleteExpenseEntry = (id) => {
-    return db.expenseEntries.where('id').equals(Number(id)).delete();
-  };
-
-export const openDB = async () => {
-  await db.open();
-  return db;
+export const deleteIncomeEntry = async (id) => {
+  await fetch(`/api/income?id=${id}`, {
+    method: 'DELETE',
+  });
 };
 
-export default db;
+export const deleteExpenseEntry = async (id) => {
+  await fetch(`/api/expense?id=${id}`, {
+    method: 'DELETE',
+  });
+};

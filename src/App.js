@@ -4,7 +4,7 @@ import { Layout, Row, Col, Card, Empty, Space, Button, Progress, Statistic } fro
 import { DollarCircleOutlined, CreditCardOutlined } from '@ant-design/icons';
 import EntryForm from './EntryForm';
 import EntryList from './EntryList';
-import { openDB, addIncomeEntry, addExpenseEntry, getIncomeEntries, getExpenseEntries, deleteIncomeEntry, deleteExpenseEntry } from './db';
+import { addIncomeEntry, addExpenseEntry, getIncomeEntries, getExpenseEntries, deleteIncomeEntry, deleteExpenseEntry } from './db';
 
 const { Content } = Layout;
 
@@ -14,45 +14,37 @@ function App() {
   const [expenseEntries, setExpenseEntries] = useState([]);
 
   useEffect(() => {
-    openDB().then(() => {
-      updateIncomeEntries();
-      updateExpenseEntries();
-    });
+    updateIncomeEntries();
+    updateExpenseEntries();
   }, []);
 
-  const updateIncomeEntries = () => {
-    getIncomeEntries().then((entries) => {
-      setIncomeEntries(entries);
-    });
+  const updateIncomeEntries = async () => {
+    const entries = await getIncomeEntries();
+    setIncomeEntries(entries);
   };
 
-  const updateExpenseEntries = () => {
-    getExpenseEntries().then((entries) => {
-      setExpenseEntries(entries);
-    });
+  const updateExpenseEntries = async () => {
+    const entries = await getExpenseEntries();
+    setExpenseEntries(entries);
   };
 
-  const handleEntrySubmit = (entry, type) => {
+  const handleEntrySubmit = async (entry, type) => {
     if (type === 'income') {
-      addIncomeEntry(entry).then(() => {
-        updateIncomeEntries();
-      });
+      await addIncomeEntry(entry);
+      await updateIncomeEntries();
     } else {
-      addExpenseEntry(entry).then(() => {
-        updateExpenseEntries();
-      });
+      await addExpenseEntry(entry);
+      await updateExpenseEntries();
     }
   };
 
-  const handleEntryDelete = (entry, type) => {
+  const handleEntryDelete = async (entry, type) => {
     if (type === 'income') {
-      deleteIncomeEntry(entry.id).then(() => {
-        updateIncomeEntries();
-      });
+      await deleteIncomeEntry(entry.id);
+      await updateIncomeEntries();
     } else {
-      deleteExpenseEntry(entry.id).then(() => {
-        updateExpenseEntries();
-      });
+      await deleteExpenseEntry(entry.id);
+      await updateExpenseEntries();
     }
   };
 
