@@ -29,58 +29,34 @@ function App() {
   };
 
   const handleEntrySubmit = async (entry, type) => {
-    if (type === 'income') {
-
-      await addIncomeEntry(entry);
-      await updateIncomeEntries();
-    } else {
-      await addExpenseEntry(entry);
-      await updateExpenseEntries();
-
-      addIncomeEntry(entry)
-        .then(() => {
-          updateIncomeEntries();
-        })
-        .catch((err) => {
-          message.error(`Не удалось добавить доход: ${err.message}`);
-        });
-    } else {
-      addExpenseEntry(entry)
-        .then(() => {
-          updateExpenseEntries();
-        })
-        .catch((err) => {
-          message.error(`Не удалось добавить расход: ${err.message}`);
-        });
-
+    try {
+      if (type === 'income') {
+        await addIncomeEntry(entry);
+        await updateIncomeEntries();
+      } else {
+        await addExpenseEntry(entry);
+        await updateExpenseEntries();
+      }
+    } catch (err) {
+      message.error(
+        `Не удалось добавить ${type === 'income' ? 'доход' : 'расход'}: ${err.message}`
+      );
     }
   };
 
   const handleEntryDelete = async (entry, type) => {
-    if (type === 'income') {
-
-      await deleteIncomeEntry(entry.id);
-      await updateIncomeEntries();
-    } else {
-      await deleteExpenseEntry(entry.id);
-      await updateExpenseEntries();
-
-      deleteIncomeEntry(entry.id)
-        .then(() => {
-          updateIncomeEntries();
-        })
-        .catch((err) => {
-          message.error(`Не удалось удалить доход: ${err.message}`);
-        });
-    } else {
-      deleteExpenseEntry(entry.id)
-        .then(() => {
-          updateExpenseEntries();
-        })
-        .catch((err) => {
-          message.error(`Не удалось удалить расход: ${err.message}`);
-        });
-
+    try {
+      if (type === 'income') {
+        await deleteIncomeEntry(entry.id);
+        await updateIncomeEntries();
+      } else {
+        await deleteExpenseEntry(entry.id);
+        await updateExpenseEntries();
+      }
+    } catch (err) {
+      message.error(
+        `Не удалось удалить ${type === 'income' ? 'доход' : 'расход'}: ${err.message}`
+      );
     }
   };
 
