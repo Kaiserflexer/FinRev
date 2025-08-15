@@ -17,7 +17,7 @@ const EntryList = ({ entries, type, onDelete }) => {
       itemLayout="horizontal"
       dataSource={entries}
       renderItem={(entry) => (
-        <List.Item>
+        <List.Item key={entry.id}>
           <List.Item.Meta
             avatar={IconComponent}
             title={entry.category}
