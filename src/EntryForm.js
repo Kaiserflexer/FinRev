@@ -14,8 +14,10 @@ const EntryForm = ({ categories, onSubmit }) => {
 
   const onFinish = (values) => {
     const entry = {
+      id: crypto.randomUUID(),
       ...values,
       type, // Передаем тип из состояния
+      id: Date.now(), // Уникальный идентификатор для последующего удаления
     };
     onSubmit(entry, type); // Теперь передаем тип снова в onSubmit
     form.resetFields();

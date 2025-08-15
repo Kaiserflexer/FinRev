@@ -18,7 +18,10 @@ module.exports = async function handler(req, res) {
     }
   } else if (method === 'POST') {
     try {
-      const entry = req.body;
+      const entry = { ...req.body };
+      if (!entry.id) {
+        entry.id = Date.now();
+      }
       const data = (await client.get(KEY)) || [];
       data.push(entry);
       await client.set(KEY, data);
