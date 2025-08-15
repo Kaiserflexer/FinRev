@@ -1,7 +1,13 @@
+
+import { render, screen } from '@testing-library/react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { message } from 'antd';
 import App from './App';
-import * as db from './db';
+
+test('renders input form title', () => {
+  render(<App />);
+  const title = screen.getByText(/Ввод данных/i);
+  expect(title).toBeInTheDocument();
 
 jest.mock('./db', () => ({
   openDB: jest.fn(),
@@ -70,4 +76,3 @@ describe('App', () => {
     });
   });
 });
-

@@ -1,12 +1,21 @@
 import '@testing-library/jest-dom';
 
-// Polyfill window.matchMedia for Ant Design components
+
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query) => ({
     matches: false,
     media: query,
     onchange: null,
+
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  }),
+});
+
     addListener: jest.fn(),
     removeListener: jest.fn(),
     addEventListener: jest.fn(),

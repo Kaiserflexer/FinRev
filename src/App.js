@@ -66,6 +66,16 @@ function App() {
     return expenseEntries.reduce((total, entry) => total + entry.amount, 0);
   };
 
+  // Calculate totals once per render to avoid duplicate work
+  const totalIncome = getTotalIncome();
+  const totalExpense = getTotalExpense();
+  const totalSum = totalIncome + totalExpense;
+  const totalDifference = totalIncome - totalExpense;
+
+  // Determine progress bar percentages, guarding against division by zero
+  const incomePercent = totalSum === 0 ? 0 : Number(((totalIncome / totalSum) * 100).toFixed(2));
+  const expensePercent = totalSum === 0 ? 0 : Number(((totalExpense / totalSum) * 100).toFixed(2));
+
   return (
     <Layout className="layout">
       <Content style={{ background: '#fff', padding: '20px' }}>
@@ -97,9 +107,9 @@ function App() {
         <Row gutter={16}>
           <Col span={8}>
             <Card title="Общий доход">
-              <Statistic title="Общий доход" value={getTotalIncome().toFixed(2)} precision={2} />
+              <Statistic title="Общий доход" value={totalIncome.toFixed(2)} precision={2} />
               <Progress
-                percent={((getTotalIncome() / (getTotalIncome() + getTotalExpense())) * 100).toFixed(2)}
+                percent={incomePercent}
                 status="active"
                 strokeColor={{
                   from: '#108ee9',
@@ -110,9 +120,9 @@ function App() {
           </Col>
           <Col span={8}>
             <Card title="Общий расход">
-              <Statistic title="Общий расход" value={getTotalExpense().toFixed(2)} precision={2} />
+              <Statistic title="Общий расход" value={totalExpense.toFixed(2)} precision={2} />
               <Progress
-                percent={((getTotalExpense() / (getTotalIncome() + getTotalExpense())) * 100).toFixed(2)}
+                percent={expensePercent}
                 status="active"
                 strokeColor={{
                   from: '#f50',
@@ -125,9 +135,9 @@ function App() {
             <Card title="Общая разница">
               <Statistic
                 title="Общая разница"
-                value={(getTotalIncome() - getTotalExpense()).toFixed(2)}
+                value={totalDifference.toFixed(2)}
                 precision={2}
-                valueStyle={{ color: getTotalIncome() - getTotalExpense() >= 0 ? 'green' : 'red' }}
+                valueStyle={{ color: totalDifference >= 0 ? 'green' : 'red' }}
               />
             </Card>
           </Col>
