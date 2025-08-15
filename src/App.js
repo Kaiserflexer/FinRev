@@ -38,9 +38,14 @@ function App() {
         await updateExpenseEntries();
       }
     } catch (err) {
+
       message.error(
         `Не удалось добавить ${type === 'income' ? 'доход' : 'расход'}: ${err.message}`
       );
+
+      const action = type === 'income' ? 'добавить доход' : 'добавить расход';
+      message.error(`Не удалось ${action}: ${err.message}`);
+
     }
   };
 
@@ -54,9 +59,14 @@ function App() {
         await updateExpenseEntries();
       }
     } catch (err) {
+
       message.error(
         `Не удалось удалить ${type === 'income' ? 'доход' : 'расход'}: ${err.message}`
       );
+
+      const action = type === 'income' ? 'удалить доход' : 'удалить расход';
+      message.error(`Не удалось ${action}: ${err.message}`);
+
     }
   };
 
