@@ -27,7 +27,6 @@ export const getExpenseEntries = async () => {
 };
 
 export const deleteIncomeEntry = async (id) => {
-
   await fetch(`/api/income?id=${id}`, {
     method: 'DELETE',
   });
@@ -37,13 +36,5 @@ export const deleteExpenseEntry = async (id) => {
   await fetch(`/api/expense?id=${id}`, {
     method: 'DELETE',
   });
-};
-
-
-  await fetch(`/api/income?id=${id}`, { method: 'DELETE' });
-};
-
-export const deleteExpenseEntry = async (id) => {
-  await fetch(`/api/expense?id=${id}`, { method: 'DELETE' });
 };
 
